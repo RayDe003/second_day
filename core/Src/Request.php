@@ -43,4 +43,21 @@ class Request
         }
         throw new Error('Accessing a non-existent property');
     }
+
+    public function has($key)
+    {
+        return isset($this->body[$key]);
+    }
+
+
+    public function query($key, $default = null)
+    {
+        return $this->input($key, $default);
+    }
+
+    public function input($key, $default = null)
+    {
+        return isset($this->body[$key]) ? $this->body[$key] : $default;
+    }
+
 }

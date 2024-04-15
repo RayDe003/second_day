@@ -8,6 +8,7 @@ use Src\View;
 use Src\Request;
 use Model\User;
 use Src\Auth\Auth;
+use Src\Validator\Validator;
 
 class Site
 {
@@ -25,10 +26,51 @@ class Site
 
     public function newLibrarian(Request $request): string
     {
-        if ($request->method==='POST' && User::create($request->all())) {
-            echo 'Пользователь успешно зарегистрирован!';
+        $librarians = User::where('role', 2)->get();
+        if ($request->method==='POST') {
+            $validator = new Validator($request->all(), [
+               'name' => ['required', 'symbols'],
+               'surname' => ['required' , 'symbols'],
+                'patronymic' => ['symbols'],
+                'login' => ['required', 'unique:users,login'],
+                'password' => ['required']
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально',
+                'symbols' => 'Поле :field должно содержать символы кириллицы'
+            ]);
+
+            if($validator->fails()){
+                return new View('site.hello',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+
+            }
+
+            if(User::create($request->all())){
+                $librarians = User::where('role', 2)->get();
+                return new View('site.hello' ,['message' => 'Ура успех', 'librarians'=>$librarians]);
+            }
         }
-        return new View('site.hello');
+
+        if ($request->method === 'GET' && $request->has('search')) {
+            $search = $request->query('search');
+            $librarian = User::where('name', 'like', '%' . $search . '%')
+                ->orWhere('surname', 'like', '%' . $search . '%')
+                ->orWhere('patronymic', 'like', '%' . $search . '%')
+                ->where('role', 2)
+                ->first();
+
+            if ($librarian) {
+                return (new View())->render('site.hello', ['librarian' => $librarian]);
+            }
+        }
+        if ($request->method === 'GET' && $request->has('clear')) {
+            $librarians = User::where('role', 2)->get();
+            return (new View())->render('site.hello', ['librarians' => $librarians]);
+        }
+
+
+        return (new View())->render('site.hello', ['librarians' => $librarians]);
     }
 
     public function login(Request $request): string
