@@ -3,7 +3,10 @@
 namespace Controller;
 
 use Illuminate\Database\Capsule\Manager as DB;
-use Model\Post;
+use Model\Author;
+use Model\Authors_books;
+use Model\Book;
+use Model\Reader;
 use Src\View;
 use Src\Request;
 use Model\User;
@@ -23,6 +26,7 @@ class Site
 //    {
 //        return new View('site.hello', ['message' => 'привет боба хихи ты админ кста']);
 //    }
+
 
     public function newLibrarian(Request $request): string
     {
@@ -97,9 +101,113 @@ class Site
         app()->route->redirect('/login');
     }
 
-    public function libAdd(): string{
-        return new View('site.libAdd');
+    public function libAdd(Request $request): string
+    {
+        $authors = Author::all();
+
+        if ($request->method==='POST') {
+            $validator = new Validator($request->all(), [
+                'name' => ['required', 'symbols'],
+                'surname' => ['required' , 'symbols'],
+                'patronymic' => ['symbols'],
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально',
+                'symbols' => 'Поле :field должно содержать символы кириллицы'
+            ]);
+
+            if($validator->fails()){
+                return new View('site.libAdd',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+
+            }
+
+            if(Author::create($request->all())){
+                return new View('site.libAdd' ,['message' => 'Ура успех']);
+            }
+        }
+
+        return new View('site.libAdd', ['authors' => $authors]);
     }
+
+    public function addBook(Request $request): string
+    {
+        $authors = Author::all();
+
+//        $validator = new Validator($request->all(), [
+//            'title' => ['required', 'symbols'],
+//            'year' => ['required'],
+//            'price' => ['required'],
+//            'is_new' => ['required']
+//        ], [
+//            'required' => 'Поле :field пусто',
+//            'unique' => 'Поле :field должно быть уникально',
+//            'symbols' => 'Поле :field должно содержать символы кириллицы'
+//        ]);
+
+//        if($validator->fails()){
+//            return new View('site.libAdd',
+//                ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+//
+//        }
+
+
+        $data = $request->all();
+
+        $book = Book::create([
+            'title' => $data['title'],
+            'year' => $data['year'],
+            'price' => $data['price'],
+            'is_new' => $data['is_new'],
+            'annotation' => $data['annotation']
+        ]);
+
+        Authors_books::create([
+            'author_id' => $data['author_id'],
+            'book_id' => $book->id
+        ]);
+
+
+
+
+
+        return new View('site.libAdd', ['authors' => $authors]);
+
+    }
+
+    public function addReader(Request  $request): string
+    {
+        $authors = Author::all();
+        // взять все модели авторов и закинуть их в шаблон (при рендере)
+        // потом в шаблоне ты перебираешь эту вкинутую переменную через форич и вставляешь в option
+
+        $validator = new Validator($request->all(), [
+            'name' => ['required', 'symbols'],
+            'surname' => ['required' , 'symbols'],
+            'address' => ['required'],
+            'phone_number' => ['required']
+        ], [
+            'required' => 'Поле :field пусто',
+            'unique' => 'Поле :field должно быть уникально',
+            'symbols' => 'Поле :field должно содержать символы кириллицы'
+        ]);
+
+        if($validator->fails()){
+            return new View('site.libAdd',
+                ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+
+        }
+
+        if(Reader::create($request->all())){
+            return new View('site.libAdd' ,['message' => 'Ура успех']);
+        }
+
+
+        return new View('site.libAdd', ['authors' => $authors]);
+
+    }
+
+
 
     public function readers(): string{
         return new View('site.readers');

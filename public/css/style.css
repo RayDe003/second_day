@@ -195,7 +195,7 @@
 
 .libAdd_input{
     width: 360px;
-    height: 30px;
+    height: 37px;
     border: none;
     border-radius: 9px;
     padding: 10px;
@@ -426,6 +426,7 @@
     height: 40px;
     border-radius: 9px;
     width: 300px;
+    cursor: pointer;
 }
 
 .outBlock{
