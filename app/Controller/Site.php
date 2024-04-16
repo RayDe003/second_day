@@ -269,6 +269,7 @@ class Site
     public function out(Request $request): string{
         $books = Book::all();
 
+
         if ($request->method === 'GET' && $request->has('search')) {
             $search = $request->query('search');
             $searchTerms = explode(' ', $search);
@@ -288,7 +289,7 @@ class Site
 
         if ($request->method === 'GET' && $request->has('clear')) {
             $books = Book::all();
-            return (new View())->render('site.books', ['out' => $books]);
+            return (new View())->render('site.out', ['books' => $books]);
         }
 
         $readers = Reader::all();
@@ -319,6 +320,6 @@ class Site
         }
 
 
-        return new View('site.out');
+        return (new View())->render('site.out', ['readers' => $readers , 'books' => $books]);
     }
 }

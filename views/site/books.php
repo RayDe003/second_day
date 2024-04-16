@@ -36,7 +36,6 @@
                     <p> <?= $selectedBook->price?> </p>
                 </div>
                 <div class="book_info">
-                    <p>Название:<?= $selectedBook->id ?> </p>
                     <p>Название:<?= $selectedBook->title ?> </p>
                     <p>Год: <?= $selectedBook->year ?> </p>
                     <p>Издание: <?= $selectedBook->is_new == 1 ? 'новое' : 'старое' ?> </p>

@@ -463,7 +463,7 @@
 }
 
 .outBlock{
-    height: 300px;
+    height: 465px;
     background-color: #B8A9CF;
     width: 500px;
     border-radius: 9px;
@@ -474,11 +474,21 @@
     gap: 10px;
 }
 
+.out_readersList{
+    overflow-y: auto;
+    scrollbar-color: #f0f3c7 #643471;
+    width: 362px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .outMain{
     display: flex;
     gap: 40px;
     justify-content: center;
-    margin-top: 100px;
+    margin-top: 40px;
 }
 
 .outBottom{
@@ -487,11 +497,9 @@
     flex-direction: column;
     margin: auto;
     gap: 40px;
-    margin-top: 80px;
-
+    margin-top: 60px;
     background-color: #b8a9cf;
-    width: 400px;
-    display: flex;
+    width: 740px;
     align-items: center;
     padding: 20px 0;
     border-radius: 9px;
@@ -500,9 +508,10 @@
 .outInput{
     border-radius: 9px;
     height: 30px;
-    width: 300px;
+    width: 273px;
     border: none;
     padding: 5px;
+    background-color: #fff;
 }
 
 .outBtn{
@@ -543,6 +552,35 @@
 }
 
 .readers_info_search{
+    background-color: #f0f8ff8f;
+    padding: 10px;
+    border-radius: 9px;
+}
+
+.out_search_btn{
+    height: 30px;
+    width: 58px;
+    border: none;
+    border-radius: 9px;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: repeat(2, 250px);
+    gap: 31px;
+}
+
+.out_bookList{
+    overflow-y: auto;
+    scrollbar-color: #f0f3c7 #643471;
+    width: 362px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.books_info_search{
     background-color: #f0f8ff8f;
     padding: 10px;
     border-radius: 9px;
