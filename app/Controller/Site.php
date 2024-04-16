@@ -204,12 +204,39 @@ class Site
     }
 
 
-
-    public function readers(): string{
+    public function readers(Request $request): string
+    {
         $readers = Reader::all();
 
-        return (new View())->render('site.readers' , [ 'readers'=>$readers]);
+        if ($request->method === 'GET' && $request->has('search')) {
+            $search = $request->query('search');
+            $searchTerms = explode(' ', $search);
+
+            $reader = Reader::where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $query->where(function ($query) use ($term) {
+                        $query->where('name', 'like', '%' . $term . '%')
+                            ->orWhere('surname', 'like', '%' . $term . '%')
+                            ->orWhere('patronymic', 'like', '%' . $term . '%')
+                            ->orWhere('phone_number', 'like', '%' . $term . '%');
+                    });
+                }
+            })->get();
+
+            if ($reader->count() > 0) {
+                return (new View())->render('site.readers', ['reader' => $reader]);
+            }
+        }
+
+        if ($request->method === 'GET' && $request->has('clear')) {
+            $readers = Reader::all();
+            return (new View())->render('site.readers', ['readers' => $readers]);
+        }
+
+        return (new View())->render('site.readers', ['readers' => $readers]);
     }
+
+
 
     public function books(): string{
         return new View('site.books');
