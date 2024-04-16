@@ -3,10 +3,13 @@
 namespace Controller;
 
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Support\Str;
 use Model\Author;
 use Model\Authors_books;
 use Model\Book;
+use Model\Bookinstance;
 use Model\Reader;
+use Model\ReadersBooks;
 use Src\View;
 use Src\Request;
 use Model\User;
@@ -254,16 +257,16 @@ class Site
             })->get();
 
             if ($book->count() > 0) {
-                return (new View())->render('site.out', ['book' => $book]);
+                return (new View())->render('site.books', ['book' => $book]);
             }
         }
 
         if ($request->method === 'GET' && $request->has('clear')) {
             $books = Book::all();
-            return (new View())->render('site.out', ['books' => $books]);
+            return (new View())->render('site.books', ['books' => $books]);
         }
 
-        return (new View())->render('site.out', ['books' => $books]);
+        return (new View())->render('site.books', ['books' => $books]);
     }
 
     public function out(Request $request): string{
@@ -319,6 +322,32 @@ class Site
             return (new View())->render('site.out', ['readers' => $readers]);
         }
 
+        return (new View())->render('site.out', ['readers' => $readers , 'books' => $books]);
+    }
+
+    public function getOut (Request $request): string
+    {
+        $books = Book::all();
+        $readers = Reader::all();
+
+        $data = $request->all();
+
+        if ($request->method === 'POST') {
+
+            $bookInstance = Bookinstance::create([
+                'book_id' => $data['selected_book_id'],
+                'ISBN' => $data['ISBN']
+            ]);
+
+            $readersBooks = ReadersBooks::create([
+                'get_back' => $data['get_back'],
+                'book_instance' => $bookInstance->ISBN,
+                'librarian' => Auth::user()->id,
+                'reader' => $data['selected_reader_id']
+            ]);
+
+            return (new View())->render('site.out', ['readers' => $readers , 'books' => $books]);
+        }
 
         return (new View())->render('site.out', ['readers' => $readers , 'books' => $books]);
     }

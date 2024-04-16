@@ -61,7 +61,8 @@
 </div>
 
 <div class="outBottom">
-    <div class="container">
+    <form action="/getOut" class="container" method="post">
+        <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
         <div class="outPerson">
             <p>Кому</p>
             <p class="outInput" id="selectedReaderName"><?= isset($_GET['selected_reader']) ? $_GET['selected_reader'] : ''; ?></p>
@@ -76,15 +77,16 @@
 
         <div class="outDate">
             <p>Дата возврата</p>
-            <label><input type="date" class="outInput"></label>
+            <label><input type="date" name="get_back" class="outInput"></label>
         </div>
         <div class="outNumber">
             <p>Издание</p>
-            <label><input class="outInput"></label>
+            <label><input name="ISBN" type="number" class="outInput"></label>
         </div>
-    </div>
+        <button class="outBtn"> оформить </button>
+    </form>
 
-    <button class="outBtn"> оформить </button>
+
 </div>
 
 <script>
