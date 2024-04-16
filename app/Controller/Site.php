@@ -134,31 +134,31 @@ class Site
     {
         $authors = Author::all();
 
-//        $validator = new Validator($request->all(), [
-//            'title' => ['required', 'symbols'],
-//            'year' => ['required'],
-//            'price' => ['required'],
-//            'is_new' => ['required']
-//        ], [
-//            'required' => 'Поле :field пусто',
-//            'unique' => 'Поле :field должно быть уникально',
-//            'symbols' => 'Поле :field должно содержать символы кириллицы'
-//        ]);
+        $validator = new Validator($request->all(), [
+            'title' => ['required', 'symbols'],
+            'year' => ['required'],
+            'price' => ['required'],
+        ], [
+            'required' => 'Поле :field пусто',
+            'unique' => 'Поле :field должно быть уникально',
+            'symbols' => 'Поле :field должно содержать символы кириллицы'
+        ]);
 
-//        if($validator->fails()){
-//            return new View('site.libAdd',
-//                ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
-//
-//        }
+        if($validator->fails()){
+            return new View('site.libAdd',
+                ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+
+        }
 
 
         $data = $request->all();
+        $isNew = isset($data['is_new']) ? true : false;
 
         $book = Book::create([
             'title' => $data['title'],
             'year' => $data['year'],
             'price' => $data['price'],
-            'is_new' => $data['is_new'],
+            'is_new' => $isNew,
             'annotation' => $data['annotation']
         ]);
 
@@ -169,8 +169,6 @@ class Site
 
 
 
-
-
         return new View('site.libAdd', ['authors' => $authors]);
 
     }
@@ -178,8 +176,6 @@ class Site
     public function addReader(Request  $request): string
     {
         $authors = Author::all();
-        // взять все модели авторов и закинуть их в шаблон (при рендере)
-        // потом в шаблоне ты перебираешь эту вкинутую переменную через форич и вставляешь в option
 
         $validator = new Validator($request->all(), [
             'name' => ['required', 'symbols'],
@@ -210,7 +206,9 @@ class Site
 
 
     public function readers(): string{
-        return new View('site.readers');
+        $readers = Reader::all();
+
+        return (new View())->render('site.readers' , [ 'readers'=>$readers]);
     }
 
     public function books(): string{

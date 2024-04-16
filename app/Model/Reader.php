@@ -12,7 +12,6 @@ class Reader extends Model
 
     public $timestamps = false;
     protected $fillable = [
-        'id',
         'name',
         'surname',
         'patronymic',

@@ -24,9 +24,7 @@
                 <label><input name="year" class="libAdd_input" placeholder="Год выпуска"></label>
                 <label><input name="price" class="libAdd_input" placeholder="Цена"></label>
                 <div class="libAdd_radio">
-                    <p>Новое издание: </p>
-                    <label class="libAdd_radio_label" >Да <input  name="is_new" id='Yes' class="libAdd_radio_input" type="radio"></label>
-                    <label class="libAdd_radio_label" >Нет <input name="is_new" id='No' class="libAdd_radio_input" type="radio"></label>
+                    <label class="libAdd_radio_label" >Новое издание:<input  name="is_new" id='Yes' class="libAdd_radio_input" type="checkbox" value="Yes"></label>
                 </div>
                 <label><input name="annotation" class="libAdd_input annotation" placeholder="Аннотация"></label>
                 <button class="libAdd_btn">Добавить</button>
