@@ -238,11 +238,87 @@ class Site
 
 
 
-    public function books(): string{
-        return new View('site.books');
+    public function books(Request $request): string{
+        $books = Book::all();
+
+        if ($request->method === 'GET' && $request->has('search')) {
+            $search = $request->query('search');
+            $searchTerms = explode(' ', $search);
+
+            $book = Book::where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $query->where(function ($query) use ($term) {
+                        $query->where('title', 'like', '%' . $term . '%');
+                    });
+                }
+            })->get();
+
+            if ($book->count() > 0) {
+                return (new View())->render('site.out', ['book' => $book]);
+            }
+        }
+
+        if ($request->method === 'GET' && $request->has('clear')) {
+            $books = Book::all();
+            return (new View())->render('site.out', ['books' => $books]);
+        }
+
+        return (new View())->render('site.out', ['books' => $books]);
     }
 
-    public function out(): string{
+    public function out(Request $request): string{
+        $books = Book::all();
+
+        if ($request->method === 'GET' && $request->has('search')) {
+            $search = $request->query('search');
+            $searchTerms = explode(' ', $search);
+
+            $book = Book::where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $query->where(function ($query) use ($term) {
+                        $query->where('title', 'like', '%' . $term . '%');
+                    });
+                }
+            })->get();
+
+            if ($book->count() > 0) {
+                return (new View())->render('site.out', ['book' => $book]);
+            }
+        }
+
+        if ($request->method === 'GET' && $request->has('clear')) {
+            $books = Book::all();
+            return (new View())->render('site.books', ['out' => $books]);
+        }
+
+        $readers = Reader::all();
+
+        if ($request->method === 'GET' && $request->has('search')) {
+            $search = $request->query('search');
+            $searchTerms = explode(' ', $search);
+
+            $reader = Reader::where(function ($query) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $query->where(function ($query) use ($term) {
+                        $query->where('name', 'like', '%' . $term . '%')
+                            ->orWhere('surname', 'like', '%' . $term . '%')
+                            ->orWhere('patronymic', 'like', '%' . $term . '%')
+                            ->orWhere('phone_number', 'like', '%' . $term . '%');
+                    });
+                }
+            })->get();
+
+            if ($reader->count() > 0) {
+                return (new View())->render('site.out', ['reader' => $reader]);
+            }
+        }
+
+        if ($request->method === 'GET' && $request->has('clear')) {
+            $readers = Reader::all();
+            return (new View())->render('site.out', ['readers' => $readers]);
+        }
+
+
         return new View('site.out');
     }
 }

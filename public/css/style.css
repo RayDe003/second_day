@@ -15,6 +15,20 @@
     margin-top: 104px;
 }
 
+.reset_button{
+    height: 106px;
+    width: 228px;
+    background-color: #f0f0f0;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: black;
+    position: absolute;
+    bottom: 17px;
+}
+
 .auth_form{
     display: flex;
     flex-direction: column;
@@ -271,6 +285,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    scrollbar-color: #f0f3c7 #643471;
+
 }
 
 .readers_search_input{
@@ -302,10 +318,10 @@
     margin: 10px 0;
 }
 
-.booksMain > div {
+.choise > div {
     display: none;
 }
-.booksMain > div:target {
+.choise > div:target {
     display: flex;
 }
 
@@ -317,12 +333,20 @@
     display: none;
 }
 
+
+.books_bookList{
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 .book_search{
     background-color: #B8A9CF;
     width: 350px;
-    height: 770px;
+    height: 811px;
     padding: 15px;
     border-radius: 9px;
+    position: relative;
 }
 
 .books_search{
@@ -338,6 +362,11 @@
     padding: 10px;
     width: 100px;
     cursor: pointer;
+}
+
+.btn_books{
+    left: 54px;
+    height: 40px;
 }
 
 .books_main{
@@ -356,7 +385,7 @@
 }
 
 .book_readers{
-    margin-top: 40px;
+    margin-top: 20px;
     background-color: #B8A9CF;
     height: 460px;
     border-radius: 9px;
@@ -494,19 +523,7 @@
     overflow-y: auto;
 }
 
-.reset_button{
-    height: 106px;
-    width: 228px;
-    background-color: #f0f0f0;
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    color: black;
-    position: absolute;
-    bottom: 17px;
-}
+
 
 .lib_readersList{
     overflow-y: auto;
