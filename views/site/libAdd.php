@@ -8,7 +8,7 @@
         <div class="libAdd" >
             <h3>Добавить книгу</h3>
 
-            <form class="libAdd_form" action="/addBook" enctype="multipart/form-data">
+            <form class="libAdd_form" method="POST" action="/addBook" enctype="multipart/form-data">
                 <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
                 <select class="libAdd_input" name="author_id">
                 <?php

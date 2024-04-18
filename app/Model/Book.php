@@ -16,7 +16,8 @@ class Book extends Model
         'year',
         'price',
         'is_new',
-        'annotation'
+        'annotation',
+        'image'
     ];
 
     public function bookInstances()

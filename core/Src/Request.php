@@ -60,4 +60,17 @@ class Request
         return isset($this->body[$key]) ? $this->body[$key] : $default;
     }
 
+    public function hasFile($key)
+    {
+        return isset($_FILES[$key]);
+    }
+
+    public function file($key)
+    {
+        if (isset($_FILES[$key])) {
+            return $_FILES[$key];
+        }
+        return null;
+    }
+
 }

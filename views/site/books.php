@@ -1,5 +1,4 @@
-
-    <div class="books_main">
+<div class="books_main">
         <div class="book_search">
             <form method="get" class="search">
                 <label><input class="books_search" placeholder="Поиск" name="search"></label>
@@ -40,7 +39,13 @@
                     <p>Год: <?= $selectedBook->year ?> </p>
                     <p>Издание: <?= $selectedBook->is_new == 1 ? 'новое' : 'старое' ?> </p>
                     <p>Аннотация: <?= $selectedBook->annotation ?> </p>
+                    <?php if ($selectedBook->image): ?>
+                        <div class='image'>
+                            <img src='<?= $selectedBook->image ?>' alt='Обложка книги'>
+                        </div>
+                    <?php endif; ?>
                 </div>
+
                 <?php else: ?>
                 <div class="books_price"></div>
                 <div class="book_info"></div>

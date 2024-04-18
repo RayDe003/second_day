@@ -19,12 +19,6 @@ use Src\Validator\Validator;
 
 class Site
 {
-    public function index(Request $request): string
-    {
-        $posts = Post::where('id', $request->id)->get();
-        return (new View())->render('site.post', ['posts' => $posts]);
-    }
-
     public function newLibrarian(Request $request): string
     {
         $librarians = User::where('role', 2)->get();
@@ -147,33 +141,32 @@ class Site
 
         }
 
+        if ($request->method === 'POST') {
+            $data = $request->all();
+            $isNew = isset($data['is_new']) ? true : false;
 
-        $data = $request->all();
-        $isNew = isset($data['is_new']) ? true : false;
+            var_dump($_FILES);
 
-        $book = Book::create([
-            'title' => $data['title'],
-            'year' => $data['year'],
-            'price' => $data['price'],
-            'is_new' => $isNew,
-            'annotation' => $data['annotation']
-        ]);
+            $image_path = $_FILES['image']['name'];
+            $path = "/public/images/";
+            $target_dir = $_SERVER['DOCUMENT_ROOT'] . $path;
+            $target_file = $target_dir . basename($image_path);
+            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
 
-        Authors_books::create([
-            'author_id' => $data['author_id'],
-            'book_id' => $book->id
-        ]);
+            $book = Book::create([
+                'title' => $data['title'],
+                'year' => $data['year'],
+                'price' => $data['price'],
+                'is_new' => $isNew,
+                'annotation' => $data['annotation'],
+                'image' => "./public/images/$image_path"
+            ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            // Сохранение имени файла изображения вместе с остальными данными книги
-            $book = new Book();
-            $book->image = $imageName;
-            $book->save();
+            Authors_books::create([
+                'author_id' => $data['author_id'],
+                'book_id' => $book->id
+            ]);
         }
-
 
         return new View('site.libAdd', ['authors' => $authors]);
 
@@ -327,6 +320,7 @@ class Site
 
     public function out(Request $request): string{
         $books = Book::all();
+        $readers = Reader::all();
 
 
         if ($request->method === 'GET' && $request->has('search')) {
@@ -342,7 +336,7 @@ class Site
             })->get();
 
             if ($book->count() > 0) {
-                return (new View())->render('site.out', ['book' => $book]);
+                return (new View())->render('site.out', ['book' => $book, 'readers'=>$readers]);
             }
         }
 
@@ -351,7 +345,7 @@ class Site
             return (new View())->render('site.out', ['books' => $books]);
         }
 
-        $readers = Reader::all();
+
 
         if ($request->method === 'GET' && $request->has('search')) {
             $search = $request->query('search');
@@ -369,7 +363,7 @@ class Site
             })->get();
 
             if ($reader->count() > 0) {
-                return (new View())->render('site.out', ['reader' => $reader]);
+                return (new View())->render('site.out', ['reader' => $reader , 'books' => $books]);
             }
         }
 

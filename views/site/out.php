@@ -2,7 +2,7 @@
     <div class="outBlock">
         <p>Кому</p>
         <form method="get" class="search">
-            <label><input class="outInput" placeholder="Поиск"></label>
+            <label><input class="outInput" placeholder="Поиск" name="search"></label>
             <button type="submit" class="out_search_btn">Найти</button>
         </form>
         <div class="out_readersList">
@@ -33,7 +33,7 @@
     <div class="outBlock">
         <p>Что</p>
         <form method="get" class="search">
-            <label><input class="outInput" placeholder="Поиск"></label>
+            <label><input class="outInput" placeholder="Поиск" name="search" ></label>
             <button type="submit" class="out_search_btn">Найти</button>
         </form>
         <div class="out_bookList">

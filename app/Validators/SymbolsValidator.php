@@ -10,7 +10,7 @@ class SymbolsValidator extends AbstractValidator
 
     public function rule(): bool
     {
-        $pattern = '/^[а-яё\s]+$/iu';
+        $pattern = '/^[а-яёА-ЯЁ\s]+$/iu';
         if (preg_match($pattern, $this->value) || $this->value === '') return true;
         else return false;
     }
