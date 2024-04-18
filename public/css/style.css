@@ -183,7 +183,7 @@
 
 .libAdd{
     width: 500px;
-    height: 600px;
+    height: 650px;
     background-color: #B8A9CF;
     border-radius: 9px;
     display: flex;
@@ -310,6 +310,7 @@
     height: 450px;
     padding: 15px;
     border-radius: 9px;
+    position: relative;
 }
 
 .readers_line{
@@ -347,6 +348,9 @@
     padding: 15px;
     border-radius: 9px;
     position: relative;
+    font-size: 20px;
+    overflow-y: auto;
+    scrollbar-color: #f0f3c7 #643471;
 }
 
 .books_search{
@@ -382,6 +386,12 @@
     height: 270px;
     border-radius: 9px;
     position: relative;
+    padding: 30px;
+    font-size: 20px;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .book_readers{
@@ -401,6 +411,10 @@
     border-radius: 9px;
     z-index: 1;
     margin-left: 450px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .libAddMain > div {
@@ -585,3 +599,37 @@
     padding: 10px;
     border-radius: 9px;
 }
+
+.readers_btn{
+    /*position: absolute;*/
+    bottom: 20px;
+    border-radius: 9px;
+    border: none;
+    height: 30px;
+    width: 200px;
+}
+
+.select_Status{
+    border: none;
+    height: 20px;
+    border-radius: 9px;
+    width: 100px;
+}
+
+.readers_BookInfo{
+    padding: 10px 0;
+}
+
+.readers_books{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    overflow-y: auto;
+    scrollbar-color: #f0f3c7 #643471;
+}
+
+.bookDatas{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+

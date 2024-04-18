@@ -21,4 +21,18 @@ class ReadersBooks extends Model
     ];
 
     protected $table = 'readers_books';
+
+    public function reader()
+    {
+        return $this->belongsTo(Reader::class);
+    }
+
+    public function bookInstance()
+    {
+        return $this->belongsTo(BookInstance::class, 'book_instance');
+    }
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
 }

@@ -48,11 +48,40 @@
 
 <div class="readers_books">
     <h2>Книги</h2>
-    <?php if(isset($books) && count($books) > 0): ?>
-        <?php foreach($books as $book): ?>
-            <li><?php echo $book->title; ?></li>
-        <?php endforeach; ?>
-    <?php else: ?>
-    <p>Книг нет</p>
-    <?php endif; ?>
+    <form class="book_InfoForm" method="post" action="/changeStatus">
+        <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
+        <?php if(isset($books) && count($books) > 0): ?>
+            <?php foreach ($books as $book): ?>
+                <div class="readers_BookInfo">
+                    <h3><?=  $book->title ?></h3>
+                    <?php foreach ($book->bookInstances as $instance): ?>
+                        <?php if($instance->readerBooks): ?>
+                            <?php foreach ($instance->readerBooks as $readerBook): ?>
+                                <div class="status_dropdown">
+                                    <form method="post" action="/changeStatus">
+                                        <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
+                                        <?php echo "<input type='hidden' value='$readerBook->id' name='readerBook_id'>" ?>
+                                        <p>ISBN: <?= $instance->ISBN ?></p>
+                                        <p>Отдача: <?= $readerBook->get_out ?></p>
+                                        <p>Возврат: <?= $readerBook->get_back ?></p>
+                                        <label>Статус: </label>
+                                        <select class="select_Status" name="status_id_<?= $readerBook->id ?>">
+                                            <?php foreach ($status as $item): ?>
+                                                <option value="<?= $item->id ?>"><?= $item->name ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button type="submit" class="readers_btn">Изменить статус</button>
+                                    </form>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Книг нет</p>
+        <?php endif; ?>
+
+    </form>
+
 </div>

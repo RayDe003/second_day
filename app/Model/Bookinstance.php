@@ -21,4 +21,6 @@ class Bookinstance extends Model
     {
         return $this->hasMany(ReadersBooks::class, 'book_instance', 'ISBN');
     }
+
+    protected $primaryKey = 'ISBN';
 }

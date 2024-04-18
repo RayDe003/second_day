@@ -8,7 +8,7 @@
         <div class="libAdd" >
             <h3>Добавить книгу</h3>
 
-            <form class="libAdd_form" action="/addBook">
+            <form class="libAdd_form" action="/addBook" enctype="multipart/form-data">
                 <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
                 <select class="libAdd_input" name="author_id">
                 <?php
@@ -26,6 +26,11 @@
                 <div class="libAdd_radio">
                     <label class="libAdd_radio_label" >Новое издание:<input  name="is_new" id='Yes' class="libAdd_radio_input" type="checkbox" value="Yes"></label>
                 </div>
+                <div>
+                    <label for="image">Изображение:</label>
+                    <input type="file" id="image" name="image">
+                </div>
+
                 <label><input name="annotation" class="libAdd_input annotation" placeholder="Аннотация"></label>
                 <button class="libAdd_btn">Добавить</button>
             </form>

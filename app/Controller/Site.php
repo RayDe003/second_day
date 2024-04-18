@@ -10,6 +10,7 @@ use Model\Book;
 use Model\Bookinstance;
 use Model\Reader;
 use Model\ReadersBooks;
+use Model\Status;
 use Src\View;
 use Src\Request;
 use Model\User;
@@ -23,13 +24,6 @@ class Site
         $posts = Post::where('id', $request->id)->get();
         return (new View())->render('site.post', ['posts' => $posts]);
     }
-
-
-//    public function hello(): string
-//    {
-//        return new View('site.hello', ['message' => 'привет боба хихи ты админ кста']);
-//    }
-
 
     public function newLibrarian(Request $request): string
     {
@@ -170,6 +164,15 @@ class Site
             'book_id' => $book->id
         ]);
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+            // Сохранение имени файла изображения вместе с остальными данными книги
+            $book = new Book();
+            $book->image = $imageName;
+            $book->save();
+        }
 
 
         return new View('site.libAdd', ['authors' => $authors]);
@@ -210,6 +213,7 @@ class Site
     public function readers(Request $request): string
     {
         $readers = Reader::all();
+        $status = Status::all();
 
         if ($request->method === 'GET' && $request->has('search')) {
             $search = $request->query('search');
@@ -227,13 +231,13 @@ class Site
             })->get();
 
             if ($reader->count() > 0) {
-                return (new View())->render('site.readers', ['reader' => $reader]);
+                return (new View())->render('site.readers', ['reader' => $reader, 'status' => $status]);
             }
         }
 
         if ($request->method === 'GET' && $request->has('clear')) {
             $readers = Reader::all();
-            return (new View())->render('site.readers', ['readers' => $readers]);
+            return (new View())->render('site.readers', ['readers' => $readers, 'status' => $status]);
         }
 
         if ($request->method === 'GET' && $request->has('reader_id')) {
@@ -241,17 +245,36 @@ class Site
             $reader = Reader::find($readerId);
             if ($reader) {
                 $books = Book::whereHas('bookInstances.readerBooks', function ($query) use ($readerId) {
-                    $query->where('readers_books.reader', $readerId);
-                })->get();
-                return (new View())->render('site.readers', ['readers' => $readers, 'books' => $books, 'selectedReader' => $reader]);
+                    $query->where('reader', $readerId);
+                })->with(['bookInstances.readerBooks.status'])->get();
+                return (new View())->render('site.readers', ['readers' => $readers, 'books' => $books, 'selectedReader' => $reader, 'status' => $status]);
             } else {
-                return (new View())->render('site.readers', ['message' => 'Читатель не найден']);
+                return (new View())->render('site.readers', ['message' => 'Читатель не найден', 'status' => $status]);
             }
         }
 
-        return (new View())->render('site.readers', ['readers' => $readers]);
+        return (new View())->render('site.readers', ['readers' => $readers, 'status' => $status]);
     }
 
+
+    public function changeStatus(Request $request): string{
+        $readers = Reader::all();
+        $status = Status::all();
+
+        $readerBook = ReadersBooks::find($request->all()['readerBook_id']);
+
+
+        if ($request->method === 'POST') {
+            $data = $request->all();
+            $chosenStatus = $data["status_id_$readerBook->id"];
+            $readerBook->status_id = $chosenStatus;
+            $readerBook->save();
+        }
+
+
+        return (new View())->render('site.readers', ['readers' => $readers, 'status' => $status]);
+
+    }
 
 
     public function books(Request $request): string{
@@ -277,6 +300,26 @@ class Site
         if ($request->method === 'GET' && $request->has('clear')) {
             $books = Book::all();
             return (new View())->render('site.books', ['books' => $books]);
+        }
+
+        if($request->method === 'GET' && $request->has('book_id')){
+            $bookId = $request->query('book_id');
+            $book = Book::find($bookId);
+            if($book){
+                $readers = Reader::whereHas('ReadersBooks.bookInstance', function ($query) use ($bookId) {
+                    $query->where('book_id', $bookId);
+                })->get();
+                $selectedBookReadersCount = $readers->count();
+                $otherBooksReadersCount = Reader::whereHas('ReadersBooks.bookInstance', function ($query) use ($bookId) {
+                    $query->where('book_id', '!=', $bookId);
+                })->get()->count();
+
+                return(new View())->render('site.books', ['books' => $books, 'readers' => $readers, 'selectedBook' => $book, 'selectedBookReadersCount' => $selectedBookReadersCount,
+                    'otherBooksReadersCount' => $otherBooksReadersCount]);
+            }
+            else {
+                return (new View())->render('site.books', ['message' => 'нет']);
+            }
         }
 
         return (new View())->render('site.books', ['books' => $books]);
@@ -347,6 +390,7 @@ class Site
 
         if ($request->method === 'POST') {
 
+
             $bookInstance = Bookinstance::create([
                 'book_id' => $data['selected_book_id'],
                 'ISBN' => $data['ISBN']
@@ -354,7 +398,7 @@ class Site
 
             $readersBooks = ReadersBooks::create([
                 'get_back' => $data['get_back'],
-                'book_instance' => $bookInstance->ISBN,
+                'book_instance' => $data['ISBN'],
                 'librarian' => Auth::user()->id,
                 'reader' => $data['selected_reader_id']
             ]);

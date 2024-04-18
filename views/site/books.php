@@ -54,11 +54,29 @@
                 </div>
             <div class="choise">
                 <div class="book_readers" id="bookList">
-                    <p>Читатели</p>
+
+                    <div class="bookDatas">
+                        <p>Читатели</p>
+                        <?php if(isset($readers) && count($readers) > 0): ?>
+                            <?php foreach($readers as $reader): ?>
+                                <p> - <?php echo $reader->name . ' ' . $reader->surname . ' ' . $reader->patronymic; ?></p>
+
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>Читателей нет</p>
+                        <?php endif; ?>
+                    </div>
+
                 </div>
 
                 <div class="book_readers" id="bookStatic">
-                    <p>Топ книг</p>
+
+                    <div class="bookDatas" >
+                        <p>Топ книг</p>
+                        <p>Число читателей выбранной книги: <?= $selectedBookReadersCount ?></p>
+                        <p>Число читателей других книг: <?= $otherBooksReadersCount ?></p>
+                    </div>
+
                 </div>
             </div>
 

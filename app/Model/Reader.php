@@ -25,4 +25,8 @@ class Reader extends Model
             ->with('bookInstance.book_id');
     }
 
+    public function ReadersBooks()
+    {
+        return $this->hasMany(ReadersBooks::class, 'reader');
+    }
 }
