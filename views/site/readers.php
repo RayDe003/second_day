@@ -48,8 +48,11 @@
 
 <div class="readers_books">
     <h2>Книги</h2>
-    <div class="readers_line"></div>
-
-
-
+    <?php if(isset($books) && count($books) > 0): ?>
+        <?php foreach($books as $book): ?>
+            <li><?php echo $book->title; ?></li>
+        <?php endforeach; ?>
+    <?php else: ?>
+    <p>Книг нет</p>
+    <?php endif; ?>
 </div>

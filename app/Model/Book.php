@@ -18,4 +18,10 @@ class Book extends Model
         'is_new',
         'annotation'
     ];
+
+    public function bookInstances()
+    {
+        return $this->hasMany(BookInstance::class, 'book_id', 'id');
+    }
+
 }

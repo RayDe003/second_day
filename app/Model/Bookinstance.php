@@ -15,6 +15,10 @@ class Bookinstance extends Model
         'book_id',
         'ISBN'
     ];
-
     protected $table = 'bookInstance';
+
+    public function readerBooks()
+    {
+        return $this->hasMany(ReadersBooks::class, 'book_instance', 'ISBN');
+    }
 }

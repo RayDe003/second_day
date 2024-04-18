@@ -236,6 +236,19 @@ class Site
             return (new View())->render('site.readers', ['readers' => $readers]);
         }
 
+        if ($request->method === 'GET' && $request->has('reader_id')) {
+            $readerId = $request->query('reader_id') + 1;
+            $reader = Reader::find($readerId);
+            if ($reader) {
+                $books = Book::whereHas('bookInstances.readerBooks', function ($query) use ($readerId) {
+                    $query->where('readers_books.reader', $readerId);
+                })->get();
+                return (new View())->render('site.readers', ['readers' => $readers, 'books' => $books, 'selectedReader' => $reader]);
+            } else {
+                return (new View())->render('site.readers', ['message' => 'Читатель не найден']);
+            }
+        }
+
         return (new View())->render('site.readers', ['readers' => $readers]);
     }
 

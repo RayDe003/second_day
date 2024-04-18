@@ -19,4 +19,10 @@ class Reader extends Model
         'phone_number'
     ];
 
+    public function books()
+    {
+        return $this->hasManyThrough(Book::class, ReadersBooks::class, 'reader', 'id', 'id', 'book_instance')
+            ->with('bookInstance.book_id');
+    }
+
 }
