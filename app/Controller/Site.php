@@ -127,12 +127,15 @@ class Site
 
         $validator = new Validator($request->all(), [
             'title' => ['required', 'symbols'],
-            'year' => ['required'],
-            'price' => ['required'],
+            'year' => ['required' , 'numbers'],
+            'price' => ['required','numbers'],
+            'image' => ['image']
         ], [
             'required' => 'Поле :field пусто',
             'unique' => 'Поле :field должно быть уникально',
-            'symbols' => 'Поле :field должно содержать символы кириллицы'
+            'symbols' => 'Поле :field должно содержать символы кириллицы',
+            'numbers' => 'Поле :field должно содержать только цифры',
+            'image' => 'Поле :field должно быть изображением'
         ]);
 
         if($validator->fails()){
@@ -144,8 +147,6 @@ class Site
         if ($request->method === 'POST') {
             $data = $request->all();
             $isNew = isset($data['is_new']) ? true : false;
-
-            var_dump($_FILES);
 
             $image_path = $_FILES['image']['name'];
             $path = "/public/images/";
@@ -180,11 +181,12 @@ class Site
             'name' => ['required', 'symbols'],
             'surname' => ['required' , 'symbols'],
             'address' => ['required'],
-            'phone_number' => ['required']
+            'phone_number' => ['required','numbers']
         ], [
             'required' => 'Поле :field пусто',
             'unique' => 'Поле :field должно быть уникально',
-            'symbols' => 'Поле :field должно содержать символы кириллицы'
+            'symbols' => 'Поле :field должно содержать символы кириллицы',
+            'numbers' => 'Поле :field должно содержать только цифры'
         ]);
 
         if($validator->fails()){
@@ -382,6 +384,19 @@ class Site
 
         $data = $request->all();
 
+        $validator = new Validator($request->all(), [
+            'ISBN' => ['required'],
+            'get_back' => ['required'],
+        ], [
+            'required' => 'Поле :field пусто',
+        ]);
+
+        if($validator->fails()){
+            return new View('site.libAdd',
+                ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+
+        }
+
         if ($request->method === 'POST') {
 
 
@@ -389,6 +404,7 @@ class Site
                 'book_id' => $data['selected_book_id'],
                 'ISBN' => $data['ISBN']
             ]);
+
 
             $readersBooks = ReadersBooks::create([
                 'get_back' => $data['get_back'],

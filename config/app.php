@@ -13,6 +13,8 @@ return [
         'required' => \Validators\RequireValidator::class,
         'unique' => \Validators\UniqueValidator::class,
         'symbols' => \Validators\SymbolsValidator::class,
+        'numbers' => \Validators\NumbersValidator::class,
+        'image' => \Validators\ImageFileValidator::class
     ],
     'routeAppMiddleware' => [
         'csrf' => \Middlewares\CSRFMiddleware::class,

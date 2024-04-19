@@ -4,13 +4,13 @@ namespace Validators;
 
 use Src\Validator\AbstractValidator;
 
-class SymbolsValidator extends AbstractValidator
+class NumbersValidator extends AbstractValidator
 {
-    protected string $message = 'Field :field только символы';
+    protected string $message = 'Field :field только цифры';
 
     public function rule(): bool
     {
-        $pattern = '/^[а-яёА-ЯЁa-zA-Z\s]+$/iu';
+        $pattern = '/^[0-9]+$/iu';
         if (preg_match($pattern, $this->value) || $this->value === '') return true;
         else return false;
     }
